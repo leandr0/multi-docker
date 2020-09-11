@@ -18,8 +18,21 @@ after_success:
   - docker build -t lrgoncalve5/multi-worker  ./worker
   # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  #Take those images and push them to docker hub
+  # Take those images and push them to docker hub
   - docker push lrgoncalve5/multi-client
   - docker push lrgoncalve5/multi-nginx
   - docker push lrgoncalve5/multi-server
   - docker push lrgoncalve5/multi-worker
+  
+deploy:
+  edge: true
+  provider: elasticbeanstalk
+  region: "us-west-1" 
+  app: "multi-docker"
+  env: "MultiDocker-env"
+  bucket_name: "elasticbeanstalk-us-west-1-115427481156" 
+  bucket_path: "multi-docker"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY 
